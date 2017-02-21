@@ -4,7 +4,7 @@ namespace DomTomProject\EasyRestBundle\Provider;
 
 use Symfony\Component\DependencyInjection\Container;
 use ReflectionClass;
-use DomTomProject\EasyRestBundle\Parser\CacherInterface;
+use DomTomProject\EasyRestBundle\Parser\Cacher\CacherInterface;
 
 class CacherProvider implements ProviderInterface {
 
@@ -15,7 +15,7 @@ class CacherProvider implements ProviderInterface {
     private $cacher;
 
     public function __construct(Container $container) {
-        $cacher = $container->get($container->getParameter('domtom_rest.cacher_service'));
+        $cacher = $container->get($container->getParameter('domtom_easy_rest.cacher_service'));
         
         if (!$this->isCacheImplementsInterface($cacher)) {
             throw new BadImplementationException('Cacher must implements ' . CacherInterface::class . '.');

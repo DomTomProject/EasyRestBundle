@@ -3,7 +3,7 @@
 namespace DomTomProject\EasyRestBundle\Parser;
 
 use DomTomProject\EasyRestBundle\Provider\CacherProvider;
-use DomTomProject\EasyRestBundle\Parser\CacherInterface;
+use DomTomProject\EasyRestBundle\Parser\Cacher\CacherInterface;
 
 class YamlRulesParser implements RulesParserInterface {
 
@@ -32,8 +32,8 @@ class YamlRulesParser implements RulesParserInterface {
      * 
      * @return array
      */
-    public function parse() {
-        return ['parsowane' => 'tak'];
+    public function parse(string $name, string $key): array {
+        return [$name => $key];
     }
 
 }

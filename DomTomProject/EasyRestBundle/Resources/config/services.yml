@@ -13,7 +13,7 @@ services:
             #####################################################################     
 
     domtom_easy_rest.rules:
-        class: DomTomProject\EasyRestBundle\Service\EntityRules
+        class: DomTomProject\EasyRestBundle\Service\Rules
         arguments: ['@domtom_easy_rest.parser_provider']
 
     domtom_easy_rest.yaml_rules_parser:

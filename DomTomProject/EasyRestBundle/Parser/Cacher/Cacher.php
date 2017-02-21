@@ -1,6 +1,6 @@
 <?php
 
-namespace DomTomProject\EasyRestBundle\Parser;
+namespace DomTomProject\EasyRestBundle\Parser\Cacher;
 
 class Cacher implements CacherInterface {
 

@@ -5,6 +5,7 @@ namespace DomTomProject\EasyRestBundle\Provider;
 use Symfony\Component\DependencyInjection\Container;
 use DomTomProject\EasyRestBundle\Parser\RulesParserInterface;
 use DomTomProject\EasyRestBundle\Exception\BadImplementationException;
+use ReflectionClass;
 
 class RulesParserProvider implements ProviderInterface {
 
@@ -18,7 +19,7 @@ class RulesParserProvider implements ProviderInterface {
      * @param Container $container
      */
     public function __construct(Container $container) {
-        $parser = $container->get($container->getParameter('domtom_rest.rules_parser_service'));
+        $parser = $container->get($container->getParameter('domtom_easy_rest.rules_parser_service'));
 
         if (!$this->isParserImplementsInterface($parser)) {
             throw new BadImplementationException('Parser must implements ' . RulesParserInterface::class . '.');
