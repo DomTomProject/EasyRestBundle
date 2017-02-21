@@ -5,7 +5,7 @@
     "autoload": {
         "psr-4": {
             "": "src/",
-            "DomTomProject\\EasyRestBundle": "DomTomProject/EasyRestBundle"
+            "DomTomProject\\EasyRestBundle\\": "DomTomProject/EasyRestBundle/"
         },
         "classmap": [
             "app/AppKernel.php",
