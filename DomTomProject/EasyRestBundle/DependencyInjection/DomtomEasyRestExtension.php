@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-class DomTomEasyRestExtension extends Extension {
+class DomtomEasyRestExtension extends Extension {
 
     public function load(array $configs, ContainerBuilder $container) {
         $configuration = new Configuration();

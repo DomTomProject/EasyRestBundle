@@ -15,6 +15,8 @@ class Configuration implements ConfigurationInterface {
         $rootNode
                 ->children()
                     ->variableNode('rules_directory')->defaultValue("%kernel.root_dir%/Resources/Validation")->cannotBeEmpty()->end()
+                    ->variableNode('rules_parser_service')->defaultValue('domtom_rest.yaml_rules_parser')->cannotBeEmpty()->end()
+                    ->variableNode('cacher_service')->defaultValue('domtom_rest.cacher')->cannotBeEmpty()->end()
                 ->end()
             ->end();
                     
