@@ -7,6 +7,8 @@ use Exception;
 
 /**
  * Throws when class must implement something ,but is not
+ *
+ *  @author Damian Zschille <crunkowiec@gmail.com>
  */
 class BadImplementationException extends Exception {
 

@@ -2,9 +2,15 @@
 
 namespace DomTomProject\EasyRestBundle\Parser\Cacher;
 
+/**
+ *  @author Damian Zschille <crunkowiec@gmail.com>
+ * 
+ *  target is caching parsed validation rules
+ */
 interface CacherInterface {
 
     /**
+     * Should return false if env is dev
      * 
      * @param string $file
      * @param bool $absolute

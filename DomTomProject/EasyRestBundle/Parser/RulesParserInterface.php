@@ -3,7 +3,15 @@
 namespace DomTomProject\EasyRestBundle\Parser;
 
 /**
+ *  @author Damian Zschille <crunkowiec@gmail.com>
  * Interface for Rules Parser
+ * Target is convert parsed data to something like this:
+ * 
+ * array(
+ *   'name' => v::stringType(),
+ *   'age'  => v::intVal(),
+ *   'hello_in_two_languages' => v::keySet(v::key('pl'), v::key('en')),
+ * )
  */
 interface RulesParserInterface {
     /**
