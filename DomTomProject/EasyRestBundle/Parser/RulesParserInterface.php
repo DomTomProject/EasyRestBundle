@@ -19,5 +19,10 @@ interface RulesParserInterface {
      * @param string $name
      * @param string $key
      */
-    public function parse(string $name, string $key): array;
+    public function parse(string $name): array;
+    
+    /**
+     * Get type of format. Example: php, yml . If parser have PHP type data is not cached
+     */
+    public function getType(): string;
 }

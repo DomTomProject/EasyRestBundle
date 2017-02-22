@@ -31,15 +31,31 @@ class YamlRulesParser implements RulesParserInterface {
      * @return array
      * @throws RulesKeyNotFoundException
      */
-    public function parse(string $name, string $key): array {
+    public function parse(string $name): array {
         $filename = $this->getFilename($name);
         $rules = Yaml::parse($this->getFile($name));
 
-        if (!isset($rules[$key])) {
-            throw new RulesKeyNotFoundException('Key ' . $key . ' not found in ' . $name . ' rules file.');
-        }
+        return $this->getAllRules($rules);
+    }
 
-        return $this->generateRules($rules[$key]);
+    /**
+     * 
+     * @return string
+     */
+    public function getType(): string {
+        return 'yml';
+    }
+
+    /**
+     * 
+     * @param array $rules
+     * @return array
+     */
+    public function getAllRules(array $rules): array {
+        foreach ($rules as $key => $rule) {
+            $rules[$key] = $this->generateRules($rule);
+        }
+        return $rules;
     }
 
     /**
@@ -153,17 +169,17 @@ class YamlRulesParser implements RulesParserInterface {
         $first = true;
 
         $isAssoc = $this->isAssoc($arguments);
-        
+
         foreach ($arguments as $key => $argument) {
             if (!$first) {
                 $arrayArgument .= ', ';
             }
             $first = false;
 
-            if($isAssoc){
+            if ($isAssoc) {
                 $arrayArgument .= '"' . $key . '" => ';
             }
-            
+
             $arrayArgument .= $this->detectAndCreateArgument($argument);
         }
 
@@ -191,7 +207,7 @@ class YamlRulesParser implements RulesParserInterface {
                 $string .= 'v::' . $this->generateFunctionWithArguments($argument);
                 return $string;
             }
-            
+
             $string .= $this->generateArrayArgument($argument);
             return $string;
         }

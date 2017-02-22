@@ -6,6 +6,7 @@ use DomTomProject\EasyRestBundle\Provider\RulesParserProvider;
 use DomTomProject\EasyRestBundle\Provider\CacherProvider;
 use DomTomProject\EasyRestBundle\Parser\Cacher\CacherInterface;
 use DomTomProject\EasyRestBundle\Parser\RulesParserInterface;
+use DomTomProject\EasyRestBundle\Exception\RulesKeyNotFoundException;
 
 /**
  * Base class for getting rules
@@ -57,19 +58,32 @@ class Rules {
      * @return array
      */
     public function get(string $name, string $key, RulesParserInterface $parser = null): array {
-        $cached = $this->getCachedIfExists($name, $key);
-        if (empty($cached)) {
-            if (empty($parser)) {
-                $parsed = $this->parser->parse($name, $key);
-            } else {
-                $parsed = $parser->parse($name, $key);
-            }
-
-            $this->cacher->save($name, $parsed);
-            return $parsed;
+        if (empty($parser)) {
+            $parser = $this->parser;
         }
 
-        return $cached;
+        if ($parser->getType() === 'php') {
+            $parsed = $parser->parse($name);
+
+            if (!isset($parsed[$key])) {
+                throw new RulesKeyNotFoundException('Key ' . $key . ' not found in ' . $name . ' rules file.');
+            }
+            return $parsed[$key];
+        }
+
+        $cached = $this->getCachedIfExists($name, $key);
+        if (empty($cached) || !isset($cached[$key])) {
+
+            $parsed = $parser->parse($name);
+
+            if (!isset($parsed[$key])) {
+                throw new RulesKeyNotFoundException('Key ' . $key . ' not found in ' . $name . ' rules file.');
+            }
+
+            return $this->cacher->save($name, $parsed)[$key];
+        }
+
+        return $cached[$key];
     }
 
     /**
