@@ -2,6 +2,11 @@
 
 use DomTomProject\EasyRestBundle\Exception\BadRequestHttpJsonException;
 
+/**
+ * REST entity trait for fast setting big amount of parameters
+ *
+ * @author Damian Zschille <crunkowiec@gmail.com>
+ */
 trait RESTEntityData
 {
     /**

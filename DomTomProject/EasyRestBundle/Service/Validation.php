@@ -5,6 +5,11 @@ namespace DomTomProject\EasyRestBundle\Service;
 use Respect\Validation\Exceptions\NestedValidationException;
 use Exception;
 
+/**
+ *  Check json data by rules.
+ *
+ *  @author Damian Zschille <crunkowiec@gmail.com>
+ */
 class Validation
 {
     private $errors = [];
@@ -32,6 +37,13 @@ class Validation
         $this->validFields = [];
     }
 
+    /**
+     * Check if fields are editable.
+     *
+     * @param array $data
+     * @param array $rules
+     * @param bool $restrict
+     */
     private function checkIsEditable(array $data, array $rules, bool $restrict) {
         foreach ($data as $field => $value) {
             if ($restrict && !array_key_exists($field, $rules)) {
@@ -40,6 +52,12 @@ class Validation
         }
     }
 
+    /**
+     * Valid fields by rules.
+     *
+     * @param array $data
+     * @param array $rules
+     */
     private function validateFieldsByRules(array $data, array $rules) {
 
         foreach ($rules as $field => $rule) {
@@ -106,6 +124,12 @@ class Validation
         return $this->errors;
     }
 
+    /**
+     * Set fields as object if needed.
+     *
+     * @param $fieldName
+     * @param $object
+     */
     public function setFieldAsObject($fieldName, $object) {
         $this->validFields[$fieldName] = $object;
     }
