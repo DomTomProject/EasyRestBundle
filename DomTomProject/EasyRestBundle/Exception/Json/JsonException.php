@@ -2,6 +2,7 @@
 
 namespace DomTomProject\EasyRestBundle\Exception\Json;
 
+use Exception;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
