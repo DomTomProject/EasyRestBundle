@@ -26,6 +26,20 @@ default:
                 - en 
                 - $in: [[intermediate, basic, none, national ]]
 ```
+This yaml file is equivalent with:
+
+```
+use Respect\Validation\Validator as v; return array (
+  'default' => 
+  array (
+    'name' => v::notEmpty()->stringType(),
+    'age' => v::notEmpty()->intType(),
+    'sex' => v::notEmpty()->in(["male", "female"]),
+    'language_with_skill' => v::keySet(v::key("pl", v::in(["intermediate", "basic", "none", "national"])), v::key("en", v::in(["intermediate", "basic", "none", "national"]))),
+  ),
+);
+```
+This file is cache created from yml.
 
 Now you can use this rules.
 ```
