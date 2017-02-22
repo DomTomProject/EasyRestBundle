@@ -3,6 +3,7 @@
 namespace DomTomProject\EasyRestBundle\Exception;
 
 use Exception;
+use Throwable;
 
 /**
  *  Throws if file with rules not found

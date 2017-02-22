@@ -3,6 +3,7 @@
 namespace DomTomProject\EasyRestBundle\Exception;
 
 use Exception;
+use Throwable;
 
 /**
  *  Throws if key of set of rules not found
