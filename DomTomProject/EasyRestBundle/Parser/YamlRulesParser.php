@@ -192,11 +192,6 @@ class YamlRulesParser implements RulesParserInterface {
                 return $string;
             }
             
-            if($this->isAssoc($argument)){
-                $string .= $this->generateArrayArgument($argument);
-                return $string;
-            }
-
             $string .= $this->generateArrayArgument($argument);
             return $string;
         }
