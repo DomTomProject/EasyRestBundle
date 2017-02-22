@@ -54,6 +54,12 @@ Now you can use this rules.
             return new JsonResponse($validator->getErrors());
   }
   
+  $validData = $validator->getValidData();
+ 
+  // now if you use FillableEntityTrait in your entity you can pass this valid data to setFromData method
+ $user->setFromData($validData);
+
+  
 ```
 
 To test this we send request with JSON.
