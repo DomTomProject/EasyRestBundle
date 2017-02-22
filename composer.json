@@ -13,7 +13,7 @@
             "name": "Tomasz Bęben",
             "email": "ex@ex.com"
         }
-	]
+	],
     "autoload": {
         "psr-4": {
             "DomTomProject\\EasyRestBundle\\": ""
