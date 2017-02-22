@@ -23,3 +23,6 @@ services:
     domtom_easy_rest.cacher:
         class: DomTomProject\EasyRestBundle\Parser\Cacher\Cacher
         arguments: ["%kernel.environment%", "%kernel.cache_dir%"]
+
+    domtom_easy_rest.validation:
+        class: DomTomProject\EasyRestBundle\Service\Validation
