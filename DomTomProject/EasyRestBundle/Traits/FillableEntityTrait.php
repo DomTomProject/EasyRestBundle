@@ -1,14 +1,15 @@
 <?php
 
-use DomTomProject\EasyRestBundle\Exception\BadRequestHttpJsonException;
+namespace DomTomProject\EasyRestBundle\Traits;
+
+use DomTomProject\EasyRestBundle\Exception\EntityMethodNotExistsException;
 
 /**
- * REST entity trait for fast setting big amount of parameters
+ * Use this trait if you want to use short data setter. 
  *
- * @author Damian Zschille <crunkowiec@gmail.com>
  */
-trait RESTEntityData
-{
+trait FillableEntityTrait {
+
     /**
      * @param array $data Params in snake_case
      *      format : param_name => value
@@ -25,6 +26,11 @@ trait RESTEntityData
         return $this;
     }
 
+    /**
+     * 
+     * @param string $field
+     * @return string
+     */
     private function convertFromSnakeToCamel(string $field): string {
 
         $fieldPartials = explode('_', $field);
@@ -37,6 +43,12 @@ trait RESTEntityData
         return $newField;
     }
 
+    /**
+     * 
+     * @param string $field
+     * @param type $value
+     * @throws EntityMethodNotExistsException
+     */
     private function fillParameter(string $field, $value) {
 
         $fieldSetter = $this->makeSetter($field);
@@ -44,11 +56,17 @@ trait RESTEntityData
         if (method_exists($this, $fieldSetter)) {
             $this->$fieldSetter($value);
         } else {
-            throw new Exception('Method ' . $fieldSetter . ' not exist in class ' . get_class($this));
+            throw new EntityMethodNotExistsException('Method ' . $fieldSetter . ' not exist in class ' . get_class($this));
         }
     }
 
+    /**
+     * 
+     * @param string $field
+     * @return string
+     */
     private function makeSetter(string $field): string {
         return 'set' . $field;
     }
+
 }
