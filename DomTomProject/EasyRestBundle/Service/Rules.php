@@ -8,7 +8,8 @@ use DomTomProject\EasyRestBundle\Parser\Cacher\CacherInterface;
 use DomTomProject\EasyRestBundle\Parser\RulesParserInterface;
 
 /**
- * Getter for rules
+ * Base class for getting rules
+ *  @author Damian Zschille <crunkowiec@gmail.com>
  */
 class Rules {
 
@@ -26,9 +27,17 @@ class Rules {
      * 
      * @param RulesParserProvider $provider
      */
-    public function __construct(RulesParserProvider $parser, CacherProvider $cacher) {
-        $this->parser = $parser->provide();
-        $this->cacher = $cacher->provide();
+    public function __construct(RulesParserProvider $parserProvider, CacherProvider $cacherProvider) {
+        $this->parser = $parserProvider->provide();
+        $this->cacher = $cacherProvider->provide();
+    }
+
+    /**
+     * Use when you want to force use parser in some actions
+     * @param RulesParserInterface $parser
+     */
+    public function setParser(RulesParserInterface $parser) {
+        $this->parser = $parser;
     }
 
     /**
@@ -44,12 +53,18 @@ class Rules {
      * 
      * @param string $name
      * @param string $key
+     * @param RulesParserInterface $parser Use when you want use diffent parser in one action
+     * @return array
      */
-    public function get(string $name, string $key): array {
+    public function get(string $name, string $key, RulesParserInterface $parser = null): array {
         $cached = $this->getCachedIfExists($name, $key);
         if (empty($cached)) {
-            $parsed = $this->parser->parse($name, $key);
-            
+            if (empty($parser)) {
+                $parsed = $this->parser->parse($name, $key);
+            } else {
+                $parsed = $parser->parse($name, $key);
+            }
+
             $this->cacher->save($name, $parsed);
             return $parsed;
         }

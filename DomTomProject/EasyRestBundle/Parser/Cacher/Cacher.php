@@ -2,6 +2,9 @@
 
 namespace DomTomProject\EasyRestBundle\Parser\Cacher;
 
+/**
+ *  @author Damian Zschille <crunkowiec@gmail.com>
+ */
 class Cacher implements CacherInterface {
 
     /**
@@ -72,7 +75,6 @@ class Cacher implements CacherInterface {
         }
 
         $exported = var_export($data, true);
-        //$exported = str_replace('\'', '', $exported);
         $exported = str_replace('\'v::', 'v::', $exported);
         $exported = str_replace(')\',', '),', $exported);
 

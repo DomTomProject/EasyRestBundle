@@ -6,17 +6,19 @@ use Symfony\Component\Yaml\Yaml;
 use DomTomProject\EasyRestBundle\Exception\RulesFileNotFoundException;
 use DomTomProject\EasyRestBundle\Exception\RulesKeyNotFoundException;
 
+/**
+ * @author Damian Zschille <crunkowiec@gmail.com>
+ */
 class YamlRulesParser implements RulesParserInterface {
 
     /**
-     *
+     * Place where rules exists ,default its app/Resources/validation
      * @var string 
      */
     private $validationPath;
 
     /**
      * 
-     * @param CacherProvider $provider
      * @param string $validationPath
      */
     public function __construct(string $validationPath) {
@@ -41,8 +43,10 @@ class YamlRulesParser implements RulesParserInterface {
     }
 
     /**
+     * Start converting 
      * 
      * @param array $rulesGroups
+     * @return array
      */
     private function generateRules(array $rulesGroups): array {
         $rules = [];
@@ -56,10 +60,15 @@ class YamlRulesParser implements RulesParserInterface {
     }
 
     /**
+     * Convert from 
+     * 'name' => 'stringType()'
+     * to
+     * 'name' => v::stringType()
      * 
      * @param array $rules
+     * @return array
      */
-    private function convertFromStringToPHP(array $rules) {
+    private function convertFromStringToPHP(array $rules): array {
 
         foreach ($rules as $key => $rule) {
             $exported = var_export($rule, true);
@@ -73,6 +82,10 @@ class YamlRulesParser implements RulesParserInterface {
     }
 
     /**
+     * Convert from
+     * 'name' => [...]
+     * to 
+     * 'name' => stringType()
      * 
      * @param array $group
      * @return string
@@ -100,6 +113,10 @@ class YamlRulesParser implements RulesParserInterface {
     }
 
     /**
+     * If function have arguments generate it here
+     * 'name' => [ 'length' => [ 1, 128 ]]
+     * to 
+     * 'name' => 'length(1, 128)'
      * 
      * @param string $functionName
      * @param array $arguments
@@ -120,10 +137,13 @@ class YamlRulesParser implements RulesParserInterface {
             $function .= $this->detectAndCreateArgument($argument);
         }
 
+        $function = str_replace('$', '', $function);
         return $function . ')';
     }
 
     /**
+     * If argument is array
+     * 'name' => in(['a', 'b'])
      * 
      * @param array $arguments
      * @return string
@@ -132,12 +152,18 @@ class YamlRulesParser implements RulesParserInterface {
         $arrayArgument = '[';
         $first = true;
 
+        $isAssoc = $this->isAssoc($arguments);
+        
         foreach ($arguments as $key => $argument) {
             if (!$first) {
                 $arrayArgument .= ', ';
             }
             $first = false;
 
+            if($isAssoc){
+                $arrayArgument .= '"' . $key . '" => ';
+            }
+            
             $arrayArgument .= $this->detectAndCreateArgument($argument);
         }
 
@@ -145,6 +171,8 @@ class YamlRulesParser implements RulesParserInterface {
     }
 
     /**
+     * Detecting arugmnet type and create him
+     * 
      * 
      * @param mixed $argument
      * @return string
@@ -163,6 +191,11 @@ class YamlRulesParser implements RulesParserInterface {
                 $string .= 'v::' . $this->generateFunctionWithArguments($argument);
                 return $string;
             }
+            
+            if($this->isAssoc($argument)){
+                $string .= $this->generateArrayArgument($argument);
+                return $string;
+            }
 
             $string .= $this->generateArrayArgument($argument);
             return $string;
@@ -176,11 +209,11 @@ class YamlRulesParser implements RulesParserInterface {
      * @return bool
      */
     private function isFunction($arguments): bool {
-        return $this->isAssoc($arguments);
+        return $this->isAssoc($arguments) && stristr(current(array_keys($arguments)), '$');
     }
 
     /**
-     * 
+     * Check is assoc array
      * @param array $array
      * @return bool
      */

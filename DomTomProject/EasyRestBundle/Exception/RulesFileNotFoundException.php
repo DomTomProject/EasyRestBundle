@@ -4,6 +4,11 @@ namespace DomTomProject\EasyRestBundle\Exception;
 
 use Exception;
 
+/**
+ *  Throws if file with rules not found
+ * 
+ *  @author Damian Zschille <crunkowiec@gmail.com>
+ */
 class RulesFileNotFoundException extends Exception {
 
     public function __construct(string $message = "", int $code = 0, Throwable $previous = null) {
