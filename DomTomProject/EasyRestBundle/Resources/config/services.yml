@@ -1,4 +1,7 @@
 services:
+    
+
+
     domtom_easy_rest.parser_provider:
         class: DomTomProject\EasyRestBundle\Provider\RulesParserProvider
         arguments: ['@service_container']
@@ -7,18 +10,19 @@ services:
         class: DomTomProject\EasyRestBundle\Provider\CacherProvider
         arguments: ['@service_container']
 
-            #####################################################################
+            #####################################################################     
 
     domtom_easy_rest.rules:
         class: DomTomProject\EasyRestBundle\Service\Rules
-        arguments: ['@domtom_easy_rest.parser_provider']
+        arguments: ['@domtom_easy_rest.parser_provider', '@domtom_easy_rest.cacher_provider']
 
     domtom_easy_rest.yaml_rules_parser:
         class: DomTomProject\EasyRestBundle\Parser\YamlRulesParser
-        arguments: ['@domtom_easy_rest.cacher_provider', %domtom_easy_rest.rules_directory%]
+        arguments: [%domtom_easy_rest.rules_directory%]
 
     domtom_easy_rest.cacher:
         class: DomTomProject\EasyRestBundle\Parser\Cacher\Cacher
+        arguments: ["%kernel.environment%", "%kernel.cache_dir%"]
 
     domtom_easy_rest.validation:
         class: DomTomProject\EasyRestBundle\Service\Validation
