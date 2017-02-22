@@ -1,7 +1,4 @@
 services:
-    
-
-
     domtom_easy_rest.parser_provider:
         class: DomTomProject\EasyRestBundle\Provider\RulesParserProvider
         arguments: ['@service_container']
@@ -9,8 +6,6 @@ services:
     domtom_easy_rest.cacher_provider:
         class: DomTomProject\EasyRestBundle\Provider\CacherProvider
         arguments: ['@service_container']
-
-            #####################################################################     
 
     domtom_easy_rest.rules:
         class: DomTomProject\EasyRestBundle\Service\Rules
