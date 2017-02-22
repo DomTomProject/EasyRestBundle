@@ -15,7 +15,6 @@ class RulesParserProvider implements ProviderInterface {
     private $parser;
 
     /**
-     * 
      * @param Container $container
      */
     public function __construct(Container $container) {
@@ -27,7 +26,6 @@ class RulesParserProvider implements ProviderInterface {
     }
 
     /**
-     *
      * @param mixed $parser
      * @throws BadImplementationException
      */
@@ -39,7 +37,6 @@ class RulesParserProvider implements ProviderInterface {
     }
 
     /**
-     * 
      * @return RulesParserInterface
      */
     public function provide() {

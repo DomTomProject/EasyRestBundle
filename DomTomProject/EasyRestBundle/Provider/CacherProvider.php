@@ -35,7 +35,6 @@ class CacherProvider implements ProviderInterface {
     }
 
     /**
-     * 
      * @return CacherInterface
      */
     public function provide() {
