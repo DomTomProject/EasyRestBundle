@@ -30,5 +30,5 @@ interface CacherInterface {
      * @param array $data
      * @param bool $absolute
      */
-    public function save(string $file, array $data, bool $absolute = false);
+    public function save(string $file, array $data, bool $absolute = false): array;
 }

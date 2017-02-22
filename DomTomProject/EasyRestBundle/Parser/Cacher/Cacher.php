@@ -69,7 +69,7 @@ class Cacher implements CacherInterface {
      * @param array $data
      * @param bool $absolute
      */
-    public function save(string $file, array $data, bool $absolute = false) {
+    public function save(string $file, array $data, bool $absolute = false): array {
         $filename = $this->cacheDir . '/validation/' . $file . '.php';
 
         if (!is_dir($this->cacheDir . '/validation')) {
@@ -80,7 +80,9 @@ class Cacher implements CacherInterface {
         $exported = str_replace('\'v::', 'v::', $exported);
         $exported = str_replace(')\',', '),', $exported);
 
-        file_put_contents($filename, '<?php use' . Validator::class . ' as v; return ' . $exported . ';');
+        file_put_contents($filename, '<?php use ' . Validator::class . ' as v; return ' . $exported . ';');
+        
+        return $this->getCache($file);
     }
 
 }
