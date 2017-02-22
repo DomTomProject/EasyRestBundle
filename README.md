@@ -26,6 +26,8 @@ default:
                 - en 
                 - $in: [[intermediate, basic, none, national ]]
 ```
+Look at $ symbol . If -keySet argument is a function you must use $ symbol otherwise you pass assoc array with key 'key' to this.
+Starting function have not $ symbol.
 This yaml file is equivalent with:
 
 ```
