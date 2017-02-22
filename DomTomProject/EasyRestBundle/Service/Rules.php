@@ -47,9 +47,9 @@ class Rules {
      */
     public function get(string $name, string $key): array {
         $cached = $this->getCachedIfExists($name, $key);
-
         if (empty($cached)) {
             $parsed = $this->parser->parse($name, $key);
+            
             $this->cacher->save($name, $parsed);
             return $parsed;
         }

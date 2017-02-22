@@ -65,7 +65,18 @@ class Cacher implements CacherInterface {
      * @param bool $absolute
      */
     public function save(string $file, array $data, bool $absolute = false) {
-        
+        $filename = $this->cacheDir . '/validation/' . $file . '.php';
+
+        if (!is_dir($this->cacheDir . '/validation')) {
+            mkdir($this->cacheDir . '/validation');
+        }
+
+        $exported = var_export($data, true);
+        //$exported = str_replace('\'', '', $exported);
+        $exported = str_replace('\'v::', 'v::', $exported);
+        $exported = str_replace(')\',', '),', $exported);
+
+        file_put_contents($filename, '<?php return ' . $exported . ';');
     }
 
 }

@@ -37,13 +37,7 @@ class YamlRulesParser implements RulesParserInterface {
             throw new RulesKeyNotFoundException('Key ' . $key . ' not found in ' . $name . ' rules file.');
         }
 
-        //// tutaj będzie się działa magia
-        dump($this->generateRules($rules[$key]));
-
-
-        die();
-
-        return $rules;
+        return $this->generateRules($rules[$key]);
     }
 
     /**
@@ -54,6 +48,25 @@ class YamlRulesParser implements RulesParserInterface {
         $rules = [];
         foreach ($rulesGroups as $key => $group) {
             $rules[$key] = $this->generateRuleForGroup($group);
+        }
+
+        $rules = $this->convertFromStringToPHP($rules);
+
+        return $rules;
+    }
+
+    /**
+     * 
+     * @param array $rules
+     */
+    private function convertFromStringToPHP(array $rules) {
+
+        foreach ($rules as $key => $rule) {
+            $exported = var_export($rule, true);
+            $exported = str_replace('\'', '', $exported);
+            $exported = str_replace('\'v::', 'v::', $exported);
+            $exported = str_replace(')\',', '),', $exported);
+            $rules[$key] = 'v::' . $exported;
         }
 
         return $rules;
@@ -104,12 +117,78 @@ class YamlRulesParser implements RulesParserInterface {
             }
             $first = false;
 
-            if (!is_array($argument)) {
-                $function .= $argument;
-            }
+            $function .= $this->detectAndCreateArgument($argument);
         }
 
         return $function . ')';
+    }
+
+    /**
+     * 
+     * @param array $arguments
+     * @return string
+     */
+    private function generateArrayArgument(array $arguments): string {
+        $arrayArgument = '[';
+        $first = true;
+
+        foreach ($arguments as $key => $argument) {
+            if (!$first) {
+                $arrayArgument .= ', ';
+            }
+            $first = false;
+
+            $arrayArgument .= $this->detectAndCreateArgument($argument);
+        }
+
+        return $arrayArgument . ']';
+    }
+
+    /**
+     * 
+     * @param mixed $argument
+     * @return string
+     */
+    private function detectAndCreateArgument($argument): string {
+        $string = '';
+        if (!is_array($argument)) {
+            if (is_string($argument)) {
+                $string .= '"' . $argument . '"';
+                return $string;
+            }
+            $string .= $argument;
+            return $string;
+        } else {
+            if ($this->isFunction($argument)) {
+                $string .= 'v::' . $this->generateFunctionWithArguments($argument);
+                return $string;
+            }
+
+            $string .= $this->generateArrayArgument($argument);
+            return $string;
+        }
+        return $string;
+    }
+
+    /**
+     * 
+     * @param type $arguments
+     * @return bool
+     */
+    private function isFunction($arguments): bool {
+        return $this->isAssoc($arguments);
+    }
+
+    /**
+     * 
+     * @param array $array
+     * @return bool
+     */
+    private function isAssoc(array $array): bool {
+        if (array() === $array) {
+            return false;
+        }
+        return array_keys($array) !== range(0, count($array) - 1);
     }
 
     /**
