@@ -1,9 +1,2 @@
-/app
-/src
-/bin
-/tests
-/var
-/vendor
-/web
 /nbproject
 .idea/
