@@ -9,7 +9,6 @@ use DomTomProject\EasyRestBundle\Parser\RulesParserInterface;
 use DomTomProject\EasyRestBundle\Exception\RulesKeyNotFoundException;
 use DomTomProject\EasyRestBundle\Exception\BadFilenameTypeException;
 
-
 /**
  * Base class for getting rules
  *  @author Damian Zschille <crunkowiec@gmail.com>
@@ -28,7 +27,8 @@ class Rules {
 
     /**
      * 
-     * @param RulesParserProvider $provider
+     * @param RulesParserProvider $parserProvider
+     * @param CacherProvider $cacherProvider
      */
     public function __construct(RulesParserProvider $parserProvider, CacherProvider $cacherProvider) {
         $this->parser = $parserProvider->provide();
@@ -61,7 +61,7 @@ class Rules {
      */
     public function get(string $name, string $key, RulesParserInterface $parser = null): array {
         $name = $this->detectFilename($name);
-        
+
         if (empty($parser)) {
             $parser = $this->parser;
         }
@@ -89,13 +89,19 @@ class Rules {
 
         return $cached[$key];
     }
-    
-    private function detectFilename(string $name): string{
-        if(!is_string($name)){
+
+    /**
+     * 
+     * @param string $name
+     * @return string
+     * @throws BadFilenameTypeException
+     */
+    private function detectFilename(string $name): string {
+        if (!is_string($name)) {
             throw new BadFilenameTypeException('Filename must be a string');
         }
         $name = explode('\\', $name);
-        
+
         return end($name);
     }
 
