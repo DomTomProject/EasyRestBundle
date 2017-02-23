@@ -17,6 +17,7 @@ class Configuration implements ConfigurationInterface {
                     ->variableNode('rules_directory')->defaultValue("%kernel.root_dir%/Resources/Validation")->cannotBeEmpty()->end()
                     ->variableNode('rules_parser_service')->defaultValue('domtom_easy_rest.yaml_rules_parser')->cannotBeEmpty()->end()
                     ->variableNode('cacher_service')->defaultValue('domtom_easy_rest.cacher')->cannotBeEmpty()->end()
+                    ->variableNode('serializer_service')->defaultValue('jms_serializer')->cannotBeEmpty()->end()
                 ->end()
             ->end();
                     
