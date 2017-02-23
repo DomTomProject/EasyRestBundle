@@ -32,7 +32,6 @@ class YamlRulesParser implements RulesParserInterface {
      * @throws RulesKeyNotFoundException
      */
     public function parse(string $name): array {
-        $filename = $this->getFilename($name);
         $rules = Yaml::parse($this->getFile($name));
 
         return $this->getAllRules($rules);
