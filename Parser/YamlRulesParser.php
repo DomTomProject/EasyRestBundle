@@ -52,6 +52,10 @@ class YamlRulesParser implements RulesParserInterface {
      */
     public function getAllRules(array $rules): array {
         foreach ($rules as $key => $rule) {
+            if (empty($rule)) {
+                $rules[$key] = null;
+                continue;
+            }
             $rules[$key] = $this->generateRules($rule);
         }
         return $rules;
@@ -66,6 +70,10 @@ class YamlRulesParser implements RulesParserInterface {
     private function generateRules(array $rulesGroups): array {
         $rules = [];
         foreach ($rulesGroups as $key => $group) {
+            if (empty($group)) {
+                $rules[$key] = [];
+                continue;
+            }
             $rules[$key] = $this->generateRuleForGroup($group);
         }
 
@@ -84,8 +92,11 @@ class YamlRulesParser implements RulesParserInterface {
      * @return array
      */
     private function convertFromStringToPHP(array $rules): array {
-
         foreach ($rules as $key => $rule) {
+            if (empty($rule)) {
+                $rules[$key] = null;
+                continue;
+            }
             $exported = var_export($rule, true);
             $exported = str_replace('\'', '', $exported);
             $exported = str_replace('\'v::', 'v::', $exported);
@@ -157,6 +168,17 @@ class YamlRulesParser implements RulesParserInterface {
     }
 
     /**
+     * 
+     * @param string $arguments
+     * @return string
+     */
+    private function generateFunction(string $arguments): string {
+        $function = $arguments . '(';
+        $function = str_replace('$', '', $function);
+        return $function . ')';
+    }
+
+    /**
      * If argument is array
      * 'name' => in(['a', 'b'])
      * 
@@ -195,6 +217,11 @@ class YamlRulesParser implements RulesParserInterface {
     private function detectAndCreateArgument($argument): string {
         $string = '';
         if (!is_array($argument)) {
+            if ($this->isFunction($argument)) {
+                $string .= 'v::' . $this->generateFunction($argument);
+                return $string;
+            }
+
             if (is_string($argument)) {
                 $string .= '"' . $argument . '"';
                 return $string;
@@ -219,7 +246,10 @@ class YamlRulesParser implements RulesParserInterface {
      * @return bool
      */
     private function isFunction($arguments): bool {
-        return $this->isAssoc($arguments) && stristr(current(array_keys($arguments)), '$');
+        if (!is_array($arguments)) {
+            return stristr($arguments, '$');
+        }
+        return stristr(current(array_keys($arguments)), '$');
     }
 
     /**
