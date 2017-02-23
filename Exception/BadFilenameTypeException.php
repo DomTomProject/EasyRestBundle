@@ -6,7 +6,6 @@ use Exception;
 use Throwable;
 
 /**
- *  Throws if file with rules not found
  * 
  *  @author Damian Zschille <crunkowiec@gmail.com>
  */
