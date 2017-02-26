@@ -26,5 +26,5 @@ services:
     domtom_easy_rest.validation:
         class: DomTomProject\EasyRestBundle\Service\Validation
 
-    domtom_easy_rest.parameters_detector:
-        class: DomTomProject\EasyRestBundle\Service\ParametersDetector
+    domtom_easy_rest.parameter_detector:
+        class: DomTomProject\EasyRestBundle\Service\ParameterDetector

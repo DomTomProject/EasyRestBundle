@@ -6,7 +6,7 @@ namespace DomTomProject\EasyRestBundle\Service;
  *  Class for detect listing parameters and convert to camel snake
  *  @author Tomasz Bęben <tomek.beben@gmail.com>
  */
-class ParametersDetector
+class ParameterDetector
 {
     public function detectListingParameters(array &$data) {
 

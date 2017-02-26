@@ -5,6 +5,10 @@
 
 ## Basic use
 
+Installation
+
+    composer composer require domtomproject/easy-rest-bundle "dev-master"
+    
 For first you need to create rules file. Default validation files path is *app/Resources/validation*. For this example we create User.yml
 ```
 default:
