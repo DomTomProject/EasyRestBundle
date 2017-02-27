@@ -16,6 +16,15 @@ And
     composer update
 ```
 
+In AppKernel.php
+```
+    $bundles = [ 
+      ...
+      new DomTomProject\EasyRestBundle\DomtomEasyRestBundle(),
+      ...
+    ]
+```
+
 In config.yml
 ```
     domtom_easy_rest: ~
