@@ -1,17 +1,30 @@
 # EasyRestBundle
 **It's bundle for fast and clean validating and setting data. Bundle use [Respect/Valiadtion](https://github.com/Respect/Validation) library and there are all validation rules.**
 
-## For now bundle not working perfectly, it's aplha version
-
 ## Basic use
 
 Installation
+```
+    composer require domtomproject/easy-rest-bundle "dev-master"
+```    
+Or in composer.json
+```
+   "domtomproject/easy-rest-bundle": "dev-master"
+```
+And 
+```
+    composer update
+```
 
-    composer composer require domtomproject/easy-rest-bundle "dev-master"
-    
+In config.yml
+```
+    domtom_easy_rest: ~
+```
+
+
 For first you need to create rules file. Default validation files path is *app/Resources/validation*. For this example we create User.yml
 ```
-default:
+default: # its a key 
     name: 
         - notEmpty
         - stringType
@@ -54,7 +67,10 @@ Now you can use this rules.
   ...
 
   $validator = $this->get('domtom_easy_rest.validation');
-  $rules = $this->get('domtom_easy_rest.rules')->getDefault(User::class); // can be string like 'User'
+  $rules = $this->get('domtom_easy_rest.rules')->getDefault(User::class); 
+  /* can be string like 'User', getDefault(User::class) equals get(User::class, 'default'), 
+  where 'default' is a key in yml 
+  */
   
   if(!$validator->validate($data, $rules)){
             return new JsonResponse($validator->getErrors());
@@ -81,5 +97,17 @@ To test this we send request with JSON.
 }
 ```
 
-In this example everything going to work. Errors are returned as array.
+In this example everything going to work. 
+
+Configurable data is:
+```
+    domtom_easy_rest: 
+        rules_directory: %kernel.root_dir%/Resources/Validation # if you want change validation files directory
+        rules_parser_service: domtom_easy_rest.yaml_rules_parser # if you want change parser, thats service name. Builded are 
+                                                                 # yaml_rules_parser and php_rules_parser 
+        cacher_service: domtom_easy_rest.cacher # like in rules_parser_service
+        serializer_service: jms_serializer # bundle uses jms_serializer ,but you can use serializer you want
+```
+
+For rules customization check [Respect/Valiadtion](https://github.com/Respect/Validation)
 
