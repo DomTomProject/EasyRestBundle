@@ -10,8 +10,8 @@ use Exception;
  *
  *  @author Damian Zschille <crunkowiec@gmail.com>
  */
-class Validation
-{
+class Validation {
+
     private $errors = [];
     private $validFields = [];
 
@@ -26,8 +26,10 @@ class Validation
     public function validate(array $data, array $rules, bool $restrict = false): bool {
         $this->clearData();
 
-        $this->checkIsEditable($data, $rules, $restrict);
-
+        if ($restrict) {
+            $this->checkIsEditable($data, $rules);
+        }
+        
         $this->validateFieldsByRules($data, $rules);
 
         return $this->isValid();
@@ -44,9 +46,9 @@ class Validation
      * @param array $rules
      * @param bool $restrict
      */
-    private function checkIsEditable(array $data, array $rules, bool $restrict) {
+    private function checkIsEditable(array $data, array $rules) {
         foreach ($data as $field => $value) {
-            if ($restrict && !array_key_exists($field, $rules)) {
+            if (!array_key_exists($field, $rules)) {
                 $this->errors[] = 'Field ' . $field . ' is not editable!';
             }
         }
@@ -103,7 +105,6 @@ class Validation
                 } else if ($restrict) {
                     $this->errors[$field] = 'Field ' . $field . ' is not editable!';
                 }
-
             } catch (NestedValidationException $e) {
                 $this->errors[$field] = $e->getFullMessage();
             }
@@ -133,4 +134,5 @@ class Validation
     public function setFieldAsObject($fieldName, $object) {
         $this->validFields[$fieldName] = $object;
     }
+
 }

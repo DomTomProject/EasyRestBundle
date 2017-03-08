@@ -12,7 +12,7 @@ use Exception;
  */
 class BadRequestHttpJsonException extends JsonException
 {
-    public function __construct($message = "", $code = 400, Exception $previous = null) {
+    public function __construct($message = "Bad request data", $code = 400, Exception $previous = null) {
         parent::__construct($code, $message, $previous);
     }
 }

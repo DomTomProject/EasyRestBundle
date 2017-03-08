@@ -18,6 +18,7 @@ class Configuration implements ConfigurationInterface {
                     ->variableNode('rules_parser_service')->defaultValue('domtom_easy_rest.yaml_rules_parser')->cannotBeEmpty()->end()
                     ->variableNode('cacher_service')->defaultValue('domtom_easy_rest.cacher')->cannotBeEmpty()->end()
                     ->variableNode('serializer_service')->defaultValue('jms_serializer')->cannotBeEmpty()->end()
+                    ->variableNode('custom_rules_namespace')->defaultValue('DomTomProject/EasyRestBundle/Rules')->cannotBeEmpty()->end()
                 ->end()
             ->end();
                     
