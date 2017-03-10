@@ -2,7 +2,7 @@
 
 namespace DomTomProject\EasyRestBundle\Parser\Cacher;
 
-use Respect\Validation\Validator;
+use Respect\Validation\Rules;
 
 /**
  *  @author Damian Zschille <crunkowiec@gmail.com>
@@ -77,10 +77,11 @@ class Cacher implements CacherInterface {
         }
 
         $exported = var_export($data, true);
-        $exported = str_replace('\'v::', 'v::', $exported);
+        $exported = str_replace('\'new', 'new', $exported);
         $exported = str_replace(')\',', '),', $exported);
+        $exported = str_replace('/', '\\', $exported);
 
-        file_put_contents($filename, '<?php use ' . Validator::class . ' as v; return ' . $exported . ';');
+        file_put_contents($filename, '<?php use Respect\Validation\Rules; return ' . $exported . ';');
         
         return $this->getCache($file);
     }

@@ -13,7 +13,7 @@ services:
 
     domtom_easy_rest.yaml_rules_parser:
         class: DomTomProject\EasyRestBundle\Parser\YamlRulesParser
-        arguments: [%domtom_easy_rest.rules_directory%]
+        arguments: [%domtom_easy_rest.rules_directory%, %domtom_easy_rest.custom_rules_namespace%]
       
     domtom_easy_rest.php_rules_parser:
         class: DomTomProject\EasyRestBundle\Parser\PHPRulesParser

@@ -16,13 +16,20 @@ class YamlRulesParser implements RulesParserInterface {
      * @var string 
      */
     private $validationPath;
+    
+    /**
+     *
+     * @var string 
+     */
+    private $customRulesNamespace;
 
     /**
      * 
      * @param string $validationPath
      */
-    public function __construct(string $validationPath) {
+    public function __construct(string $validationPath, string $customRulesNamespace) {
         $this->validationPath = $validationPath;
+        $this->customRulesNamespace = $customRulesNamespace;
     }
 
     /**
@@ -33,7 +40,6 @@ class YamlRulesParser implements RulesParserInterface {
      */
     public function parse(string $name): array {
         $rules = Yaml::parse($this->getFile($name));
-
         return $this->getAllRules($rules);
     }
 
@@ -86,7 +92,7 @@ class YamlRulesParser implements RulesParserInterface {
      * Convert from 
      * 'name' => 'stringType()'
      * to
-     * 'name' => v::stringType()
+     * 'name' => new stringType()
      * 
      * @param array $rules
      * @return array
@@ -99,11 +105,10 @@ class YamlRulesParser implements RulesParserInterface {
             }
             $exported = var_export($rule, true);
             $exported = str_replace('\'', '', $exported);
-            $exported = str_replace('\'v::', 'v::', $exported);
             $exported = str_replace(')\',', '),', $exported);
-            $rules[$key] = 'v::' . $exported;
+            $exported = 'new Rules/AllOf(' . $exported . ')';
+            $rules[$key] = $exported;
         }
-
         return $rules;
     }
 
@@ -122,13 +127,13 @@ class YamlRulesParser implements RulesParserInterface {
 
         foreach ($group as $rules) {
             if (!$first) {
-                $generated .= '->';
+                $generated .= ', ';
             }
             $first = false;
 
             // method with no arguments, ex: stringType
             if (!is_array($rules)) {
-                $generated .= $rules . '()';
+                $generated .= $this->generateFunction($rules);
                 continue;
             }
 
@@ -150,7 +155,13 @@ class YamlRulesParser implements RulesParserInterface {
     private function generateFunctionWithArguments(array $arguments): string {
         // get function name
         $functionName = current(array_keys($arguments));
-        $function = $functionName . '(';
+        $trueFunctionName = ucfirst(str_replace('$', '', $functionName));
+        if ($this->isCustomFunction($functionName)) {
+            $trueFunctionName = ucfirst(str_replace('!', '', $trueFunctionName));
+            $function = 'new ' . $this->customRulesNamespace . '/' . $trueFunctionName . '(';
+        } else {
+            $function = 'new Rules/' . $trueFunctionName . '(';
+        }
         $first = true;
 
         // build args for this functions
@@ -162,8 +173,8 @@ class YamlRulesParser implements RulesParserInterface {
 
             $function .= $this->detectAndCreateArgument($argument);
         }
-
         $function = str_replace('$', '', $function);
+        $function = str_replace('!', '', $function);
         return $function . ')';
     }
 
@@ -174,8 +185,12 @@ class YamlRulesParser implements RulesParserInterface {
      */
     private function generateFunction(string $arguments): string {
         $function = $arguments . '(';
-        $function = str_replace('$', '', $function);
-        return $function . ')';
+        $function = ucfirst(str_replace('$', '', $function));
+        if ($this->isCustomFunction($function)) {
+            $function = str_replace('!', '', $function);
+            return 'new ' . $this->customRulesNamespace . '/' . $function . ')';
+        }
+        return 'new Rules/' . $function . ')';
     }
 
     /**
@@ -218,7 +233,7 @@ class YamlRulesParser implements RulesParserInterface {
         $string = '';
         if (!is_array($argument)) {
             if ($this->isFunction($argument)) {
-                $string .= 'v::' . $this->generateFunction($argument);
+                $string .= $this->generateFunction($argument);
                 return $string;
             }
 
@@ -230,7 +245,7 @@ class YamlRulesParser implements RulesParserInterface {
             return $string;
         } else {
             if ($this->isFunction($argument)) {
-                $string .= 'v::' . $this->generateFunctionWithArguments($argument);
+                $string .= $this->generateFunctionWithArguments($argument);
                 return $string;
             }
 
@@ -240,9 +255,16 @@ class YamlRulesParser implements RulesParserInterface {
         return $string;
     }
 
+    private function isCustomFunction($arguments): bool {
+        if (!is_array($arguments)) {
+            return stristr($arguments, '!');
+        }
+        return stristr(current(array_keys($arguments)), '!');
+    }
+
     /**
      * 
-     * @param type $arguments
+     * @param mixed $arguments
      * @return bool
      */
     private function isFunction($arguments): bool {
