@@ -57,6 +57,7 @@ Starting function have not $ symbol.
 This yaml file is equivalent with:
 
 ```
+/* static version */
 use Respect\Validation\Validator as v; return array (
   'default' => 
   array (
@@ -64,6 +65,17 @@ use Respect\Validation\Validator as v; return array (
     'age' => v::notEmpty()->intType(),
     'sex' => v::notEmpty()->in(["male", "female"]),
     'language_with_skill' => v::keySet(v::key("pl", v::in(["intermediate", "basic", "none", "national"])), v::key("en", v::in(["intermediate", "basic", "none", "national"]))),
+  ),
+);
+
+/* 'new' version, used for caching (because it's little bit faster) */
+use Respect\Validation\Rules; return array (
+  'default' => 
+  array (
+    'name' => new Rules\AllOf(new Rules\NotEmpty(), new Rules\StringType()),
+    'age' => new Rules\AllOf(new Rules\NotEmpty(), new Rules\IntType()),
+    'sex' => new Rules\AllOf(new Rules\NotEmpty(), new Rules\In(["male", "female"])),
+    'language_with_skill' => new Rules\AllOf(new Rules\KeySet(new Rules\Key("pl", new Rules\In(["intermediate", "basic", "none", "national"])), new Rules\Key("en", new Rules\In(["intermediate", "basic", "none", "national"])))),
   ),
 );
 ```
