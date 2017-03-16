@@ -61,10 +61,9 @@ class Validation {
      * @param array $rules
      */
     private function validateFieldsByRules(array $data, array $rules) {
-
         foreach ($rules as $field => $rule) {
             try {
-                if (isset($data[$field])) {
+                if (array_key_exists($field, $data)) {
                     if (!empty($rule)) {
                         $rule->setName(ucfirst($field))->assert($data[$field]);
                     }
