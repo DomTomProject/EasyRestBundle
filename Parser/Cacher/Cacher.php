@@ -2,8 +2,6 @@
 
 namespace DomTomProject\EasyRestBundle\Parser\Cacher;
 
-use Respect\Validation\Rules;
-
 /**
  *  @author Damian Zschille <crunkowiec@gmail.com>
  */
@@ -79,7 +77,8 @@ class Cacher implements CacherInterface {
         $exported = var_export($data, true);
         $exported = str_replace('\'new', 'new', $exported);
         $exported = str_replace(')\',', '),', $exported);
-        $exported = str_replace('/', '\\', $exported);
+        $exported = str_replace('\\\\', '\\', $exported);
+        $exported = str_replace('\\\\', '\\', $exported);
 
         file_put_contents($filename, '<?php use Respect\Validation\Rules; return ' . $exported . ';');
         

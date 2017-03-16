@@ -106,7 +106,7 @@ class YamlRulesParser implements RulesParserInterface {
             $exported = var_export($rule, true);
             $exported = str_replace('\'', '', $exported);
             $exported = str_replace(')\',', '),', $exported);
-            $exported = 'new Rules/AllOf(' . $exported . ')';
+            $exported = 'new Rules\AllOf(' . $exported . ')';
             $rules[$key] = $exported;
         }
         return $rules;
@@ -160,7 +160,7 @@ class YamlRulesParser implements RulesParserInterface {
             $trueFunctionName = ucfirst(str_replace('!', '', $trueFunctionName));
             $function = 'new ' . $this->customRulesNamespace . '/' . $trueFunctionName . '(';
         } else {
-            $function = 'new Rules/' . $trueFunctionName . '(';
+            $function = 'new Rules\\' . $trueFunctionName . '(';
         }
         $first = true;
 
@@ -190,7 +190,7 @@ class YamlRulesParser implements RulesParserInterface {
             $function = str_replace('!', '', $function);
             return 'new ' . $this->customRulesNamespace . '/' . $function . ')';
         }
-        return 'new Rules/' . $function . ')';
+        return 'new Rules\\' . $function . ')';
     }
 
     /**
