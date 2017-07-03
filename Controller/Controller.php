@@ -4,8 +4,8 @@ namespace DomTomProject\EasyRestBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as Base;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use AppBundle\Exception\InternalErrorJsonException;
-use AppBundle\Exception\NotFoundHttpJsonException;
+use DomTomProject\EasyRestBundle\Exception\InternalErrorJsonException;
+use DomTomProject\EasyRestBundle\Exceptionn\NotFoundHttpJsonException;
 
 /**
  *  Custom controller base
