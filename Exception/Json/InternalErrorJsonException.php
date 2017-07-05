@@ -1,6 +1,6 @@
 <?php
 
-namespace DomTomProject\EasyRestBundle\Exception;
+namespace DomTomProject\EasyRestBundle\Exception\Json;
 
 use DomTomProject\EasyRestBundle\Exception\Json\JsonException;
 use Exception;
